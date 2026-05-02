@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a1614" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Long Story Short" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Long Story Short</title>
+</head>
+<body>
+  <header class="app-header">
+    <h1>Long Story Short</h1>
+    <div class="header-actions">
+      <button id="export-btn"  class="ghost"  title="Export backup">↓</button>
+      <button id="import-btn"  class="ghost"  title="Import backup">↑</button>
+      <input  id="import-file" type="file" accept="application/json" hidden />
+    </div>
+  </header>
+  <main id="timeline" class="timeline" aria-busy="true">
+    <p class="loading">Loading…</p>
+  </main>
+  <script type="module" src="src/timeline.js"></script>
+</body>
+</html>

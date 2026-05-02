@@ -1,0 +1,276 @@
+/* === Palette =====================================================
+   Warm-paper light theme by default; honour prefers-color-scheme.
+   Tiles are paintings, so the chrome stays muted to let them breathe. */
+:root {
+  --bg:        #f4ede0;
+  --bg-soft:   #ece2cf;
+  --fg:        #2a221b;
+  --fg-soft:   #6b5e4f;
+  --accent:    #6a4a2b;
+  --tile-radius: 6px;
+  --tile-shadow: 0 1px 2px rgba(0,0,0,.10), 0 4px 12px rgba(0,0,0,.06);
+  --tile-shadow-strong: 0 2px 6px rgba(0,0,0,.18), 0 12px 30px rgba(0,0,0,.12);
+  --gap: 6px;
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:      #161310;
+    --bg-soft: #221d18;
+    --fg:      #ece2cf;
+    --fg-soft: #a59682;
+    --accent:  #d6b58a;
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+               "Helvetica Neue", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: contain;
+}
+
+/* === Header ====================================================== */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: calc(var(--safe-top) + 12px) 16px 12px;
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+          backdrop-filter: blur(12px);
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
+}
+.app-header h1 {
+  flex: 1;
+  margin: 0;
+  font: 600 17px/1 -apple-system, "SF Pro Display", system-ui, sans-serif;
+  letter-spacing: -.01em;
+}
+.header-actions {
+  display: flex;
+  gap: 4px;
+}
+button.ghost, a.ghost {
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--fg);
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  width: 36px; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+button.ghost:active, a.ghost:active {
+  background: color-mix(in srgb, var(--fg) 10%, transparent);
+}
+.back-link { font-size: 22px; line-height: 1; }
+
+/* === Timeline ==================================================== */
+.timeline { padding: 12px 12px calc(48px + var(--safe-bottom)); }
+.loading {
+  color: var(--fg-soft);
+  text-align: center;
+  padding: 48px 0;
+  font-size: 14px;
+}
+.month {
+  margin: 24px 0 32px;
+}
+.month-label {
+  margin: 0 4px 10px;
+  font: 500 13px/1 -apple-system, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--fg-soft);
+}
+.weekday-row, .day-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--gap);
+}
+.weekday-row {
+  margin-bottom: 6px;
+}
+.weekday-row span {
+  font: 500 10px/1 -apple-system, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--fg-soft);
+  text-align: center;
+  padding: 4px 0;
+}
+.day-row { margin-bottom: var(--gap); }
+
+/* === Tile ======================================================== */
+.tile {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: block;
+  border-radius: var(--tile-radius);
+  background: var(--bg-soft);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--tile-shadow);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.tile:active {
+  transform: scale(.97);
+}
+.tile.empty {
+  box-shadow: none;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent 0 5px,
+      color-mix(in srgb, var(--fg) 4%, transparent) 5px 6px);
+}
+.tile.future {
+  opacity: .25;
+  pointer-events: none;
+}
+.tile img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: saturate(1.05);
+}
+.tile .day-num {
+  position: absolute;
+  inset: auto 4px 4px auto;
+  font: 600 11px/1 -apple-system, "SF Pro Text", system-ui, sans-serif;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+  letter-spacing: .02em;
+}
+.tile.empty .day-num {
+  color: var(--fg-soft);
+  text-shadow: none;
+}
+.tile.today {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.tile .moon {
+  position: absolute;
+  top: 4px; left: 4px;
+  font-size: 10px;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,.5));
+}
+.tile .has-entry-dot {
+  position: absolute;
+  top: 4px; right: 4px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.3);
+}
+
+/* === Day editor ================================================== */
+.day-page { background: var(--bg); }
+.day {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px 16px calc(64px + var(--safe-bottom));
+}
+.day-hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--tile-shadow-strong);
+  background: var(--bg-soft);
+  margin-bottom: 18px;
+}
+.day-hero img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.day-hero .meta {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 18px 14px 12px;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,.55));
+  color: #fff;
+  font: 500 12px/1.4 -apple-system, system-ui, sans-serif;
+  letter-spacing: .02em;
+}
+.day-hero .meta .title { font-weight: 600; font-size: 13px; }
+.day-hero .meta .credit { opacity: .85; }
+.day-weather {
+  display: flex; gap: 12px; align-items: center;
+  font: 500 13px/1 -apple-system, system-ui, sans-serif;
+  color: var(--fg-soft);
+  margin-bottom: 14px;
+}
+.day-weather .pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  color: var(--fg);
+}
+textarea.day-text {
+  width: 100%;
+  min-height: 140px;
+  border: 0;
+  background: transparent;
+  resize: vertical;
+  font: 400 17px/1.55 ui-serif, Georgia, "New York", "Times New Roman", serif;
+  color: var(--fg);
+  padding: 8px 0;
+  outline: none;
+}
+textarea.day-text::placeholder {
+  color: color-mix(in srgb, var(--fg-soft) 80%, transparent);
+  font-style: italic;
+}
+.day-photo {
+  margin-top: 14px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.day-photo img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: var(--tile-shadow);
+}
+.photo-row { display: flex; gap: 8px; }
+.btn {
+  appearance: none;
+  border: 0;
+  background: var(--accent);
+  color: var(--bg);
+  font: 600 14px/1 -apple-system, system-ui, sans-serif;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn.subtle {
+  background: var(--bg-soft);
+  color: var(--fg);
+}
+.btn.danger {
+  background: transparent;
+  color: #b04646;
+}
+.day-status {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--fg-soft);
+  min-height: 1em;
+}
+
+/* === Tablet/desktop tweaks ======================================= */
+@media (min-width: 600px) {
+  .timeline { padding: 16px 24px 64px; max-width: 720px; margin: 0 auto; }
+  :root { --gap: 8px; }
+}
